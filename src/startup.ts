@@ -1,30 +1,37 @@
-import { box, label, window, checkbox } from "openrct2-flexui";
+import { label, window, listview, box, Bindable } from "openrct2-flexui";
 import * as fs from "fs";
 
-const baseHeight = 50;
-const heightPerPlugin = 20;
+const baseHeight = 40;
+const heightPerPlugin = 15;
+let plugin: Bindable<String> = "";
 
 export const allWidgets = window({
   title: "OpenRCT2 Plugin Manager",
-  width: { value: 200, min: 200, max: 10_000 },
+  width: {
+    value: 400,
+    min: 200,
+    max: 10_000,
+  },
   height: {
     value: baseHeight + pluginManager.plugins.length * heightPerPlugin,
     min: 200,
     max: 10_000,
   },
   content: [
+    listview({
+      items: pluginManager.plugins.map(
+        (plugin) => `${plugin.name} - ${plugin.authors.toString()}`
+      ),
+      onClick: (index) => {
+        plugin = fetchInfo();
+        park.postMessage(updateInfo(index));
+      },
+    }),
     box({
       content: label({
-        text: "Your plugins",
+        text: plugin.toString(),
         alignment: "centred",
       }),
-    }),
-    label({
-      text: pluginManager.plugins
-        .map((plugin) => {
-          return plugin.name;
-        })
-        .join("\n\n"),
     }),
   ],
 });
@@ -34,6 +41,14 @@ export function startup() {
     const menuItemName = "Plugin Manager";
     ui.registerMenuItem(menuItemName, () => allWidgets.open());
   }
+}
+
+function updateInfo(index: number) {
+  return pluginManager.plugins[index].name;
+}
+
+function fetchInfo() {
+  return plugin.toString();
 }
 
 export function removePlugins(name: string) {
@@ -64,8 +79,4 @@ export function removePlugins(name: string) {
       }
     });
   }
-}
-
-export function registerPlugin(name: String) {
-  registerPlugin(name);
 }

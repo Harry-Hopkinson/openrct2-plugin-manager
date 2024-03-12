@@ -1,13 +1,6 @@
-<div align='center'>
-
 # OpenRCT2 Plugin Manager
 
-</div>
-
-<p align="center">
-    A plugin manager for OpenRCT2 (Currently in development)
-    <br>
-</p>
+A plugin manager for OpenRCT2 (Currently in development)
 
 ![screenshot](images/plugin-manager.png)
 

@@ -109,3 +109,5 @@ dist
 # Visual Studio
 .vs/
 .vscode/
+
+.DS_Store

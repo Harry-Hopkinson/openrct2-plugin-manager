@@ -1,55 +1,63 @@
-import { label, window, listview, box, Bindable } from "openrct2-flexui";
+import { label, tab, tabwindow, box, listview, store } from "openrct2-flexui";
 import * as fs from "fs";
 
-const baseHeight = 40;
+const baseHeight = 35;
 const heightPerPlugin = 15;
-let plugin: Bindable<String> = "";
 
-export const allWidgets = window({
+const selectedPlugin = store("");
+
+function updatePlugin(sourceName: string): void {
+  selectedPlugin.set(sourceName);
+}
+
+export const allWidgets = tabwindow({
   title: "OpenRCT2 Plugin Manager",
   width: {
-    value: 400,
-    min: 200,
+    value: 350,
+    min: 150,
     max: 10_000,
   },
   height: {
     value: baseHeight + pluginManager.plugins.length * heightPerPlugin,
-    min: 200,
+    min: baseHeight + heightPerPlugin,
     max: 10_000,
   },
-  content: [
-    listview({
-      items: pluginManager.plugins.map(
-        (plugin) => `${plugin.name} - ${plugin.authors.toString()}`
-      ),
-      onClick: (index) => {
-        plugin = fetchInfo();
-        park.postMessage(updateInfo(index));
-      },
+  tabs: [
+    tab({
+      image: "search",
+      content: [
+        label({
+          text: "Select a plugin to view more information",
+          alignment: "centred",
+        }),
+        listview({
+          items: pluginManager.plugins.map((plugin) => `${plugin.name}`),
+          onClick: (index) => {
+            const info =
+              pluginManager.plugins[index].name +
+              " - Author(s): " +
+              pluginManager.plugins[index].authors;
+            updatePlugin(info);
+          },
+        }),
+        box({
+          content: label({
+            text: selectedPlugin,
+            alignment: "centred",
+          }),
+        }),
+      ],
     }),
-    box({
-      content: label({
-        text: plugin.toString(),
-        alignment: "centred",
-      }),
-    }),
+    // tab({
+    //   image: {
+    //     frameBase: 5367,
+    //     frameCount: 8,
+    //     frameDuration: 4,
+    //   },
+    //   content: [],
+    // }),
   ],
 });
-
-export function startup() {
-  if (typeof ui !== "undefined") {
-    const menuItemName = "Plugin Manager";
-    ui.registerMenuItem(menuItemName, () => allWidgets.open());
-  }
-}
-
-function updateInfo(index: number) {
-  return pluginManager.plugins[index].name;
-}
-
-function fetchInfo() {
-  return plugin.toString();
-}
 
 export function removePlugins(name: string) {
   let path: string = "";
@@ -78,5 +86,12 @@ export function removePlugins(name: string) {
         }
       }
     });
+  }
+}
+
+export function startup() {
+  if (typeof ui !== "undefined") {
+    const menuItemName = "Plugin Manager";
+    ui.registerMenuItem(menuItemName, () => allWidgets.open());
   }
 }

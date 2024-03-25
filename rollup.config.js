@@ -4,6 +4,7 @@ import typescript from "@rollup/plugin-typescript";
 import { exec } from "child_process";
 import { homedir } from "os";
 import { promisify } from "util";
+import nodePolyfills from "rollup-plugin-polyfill-node";
 import { name, version } from "./src/info.js";
 
 const options = {
@@ -63,6 +64,7 @@ const config = {
         beautify: options.build === "development",
       },
     }),
+    nodePolyfills(),
   ],
 };
 

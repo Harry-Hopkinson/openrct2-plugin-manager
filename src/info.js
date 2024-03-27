@@ -1,5 +1,5 @@
 export const name = "openrct-plugin-manager";
-export const version = "1.0.2";
+export const version = "1.0.3";
 export const type = "intransient";
 export const license = "MIT";
 

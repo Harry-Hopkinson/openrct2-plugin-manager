@@ -1,6 +1,6 @@
 import { label, tab, tabwindow, box, listview, store } from "openrct2-flexui";
 
-const baseHeight = 35;
+const baseHeight = 90;
 const heightPerPlugin = 15;
 
 const selectedPlugin = store("");
